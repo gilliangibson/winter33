@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>winter33</title>
+    <title>winter34</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
@@ -13,6 +13,7 @@
     <script src="js/batterycapacity.js"></script>
     <script src="js/leftsignal.js"></script>
     <script src="js/front_leftsignal.js"></script>
+    <script src="js/front_rightsignal.js"></script>
 
     <!---
     <script src="charge107.js"></script>
@@ -37,6 +38,76 @@
         [null, 50]
     ];
 
+    var tempo = 2000;
+    birthdaysong = [
+            [392.0, tempo * .125], //G
+            [392.0, tempo * .125], //G
+            [440.0, tempo * .25], //A
+            [392.0, tempo * .25], //G
+            [523.3, tempo * .25], //C
+            [493.3, tempo * .50], //B
+            [null, tempo * .15],
+            [null, tempo * .10],
+            [392.0, tempo * .125], //G
+            [392.0, tempo * .125], //G
+            [440.0, tempo * .25], //A
+            [392.0, tempo * .25], //G
+            [587.3, tempo * .25], //D
+            [523.3, tempo * .50], //C
+            [null, tempo * .15],
+            [null, tempo * .10],
+            [392.0, tempo * .125], //G 
+            [392.0, tempo * .125], //G
+            [784.0, tempo * .25], //G
+            [659.3, tempo * .25], //E
+            [523.3, tempo * .25], //C
+            [493.3, tempo * .25], //B
+            [440.0, tempo * .25], //A
+            [null, tempo * .25],
+            [698.5, tempo * .125], //F
+            [698.5, tempo * .125], //F
+            [659.3, tempo * .25], //E
+            [523.3, tempo * .25], //C
+            [659.3, tempo * .25], //E
+            [587.3, tempo * .50], //D
+            [null, tempo * .15],
+            [null, tempo * .10],
+        ];
+
+
+    var tempo = 2000;
+    newsong = [
+            [329.6, tempo * .125], 
+            [493.9, tempo * .25], 
+            [493.9, tempo * .25], 
+            [493.9, tempo * .25],
+            [493.9, tempo * .125], 
+            [493.9, tempo * .125], 
+            [493.9, tempo * .125], 
+            [440.0, tempo * .125],  
+            [392.0, tempo * .125], 
+            [392.0, tempo * .375],
+            [null, tempo * .03125],
+            [392.0, tempo * .125],
+            [392.0, tempo * .125],  
+            [440.0, tempo * .125], 
+            [440.0, tempo * .50], 
+            [null, tempo * .125], //16
+            [440.0, tempo * .125],
+            [392.0, tempo * .125],
+            [329.6, tempo * .625],
+            [261.6, tempo * .375],
+            [329.6, tempo * .125],
+            [493.9, tempo * .125],
+            [493.9, tempo * .125],
+            [493.9, tempo * .125],
+            [493.9, tempo * .375],
+            [587.3, tempo * .125],
+            [587.3, tempo * .25],
+            [493.9, tempo * .375],
+
+        ];
+
     function sensop(mag) {
         //newmag = 2 * ((1 - mag) - .5);
         newmag = mag
@@ -53,7 +124,7 @@
             $("#allsensors").toggleClass('hidden');
         });
         //var socket = io.connect('http://10.48.102.xxx:3001'); //change this to match your robot
-        var socket = io.connect('http://10.48.102.xxx:3001'); //change this to match your robot
+        var socket = io.connect('http://10.48.102.108:3001'); //change this to match your robot
         batterycapacity(socket);
         leftsignal(socket);
         front_leftsignal(socket);
@@ -120,8 +191,8 @@
         $("#turnLeft").click(function(e) {
             console.log('stop');
             socket.emit('drive', {
-                left: -15,
-                right: 15
+                left: -30,
+                right: 30
             });
         });
 
@@ -129,13 +200,21 @@
         $("#turnRight").click(function(e) {
             console.log('stop');
             socket.emit('drive', {
-                left: 15,
-                right: -15
+                left: 30,
+                right: -30
             });
         });
 
         $("#playsong").click(function(e) {
             socket.emit('sing', mysong);
+        });
+
+        $("#playbirthday").click(function(e) {
+            socket.emit('sing', birthdaysong);
+        });
+
+        $("#playnewsong").click(function(e) {
+            socket.emit('sing', newsong);
         });
 
         $("#passiveMode").click(function(e) {
@@ -153,6 +232,7 @@
         $('body').keydown(function(event) {
             console.log(event.which);
             speed = $("#speed").text();
+
             //speed = 100;
             if (event.which === 87 || event.which === 38) //w, up arrow - move forward
             {
@@ -291,6 +371,7 @@
 
 
         </div>
+    <div>
         <div class="row">
             <div class="col-xs-3 sensor-block col-xs-offset-1">
                 <div class="sensor-title">Voltage</div>
@@ -306,7 +387,7 @@
             </div>
         </div>
 
-
+<div>
         <h3>Robot Control</h3>
         <div class="row">
             <button class="btn-success btn col-md-2" id="passiveMode">Passive Mode</button>
@@ -314,10 +395,17 @@
             <button class="btn-danger btn col-md-2" id="fullMode">Full Mode</button>
         </div>
         <div class="row">
-            <div class="col-xs-3">
-
-
+            <div class="col-md-2">
                 <button id="playsong" class="btn-success btn-lg btn-block">Play Music
+                </button>
+            </div>
+            <div class="col-md-2">
+                <button id="playbirthday" class="btn-success btn-lg btn-block">Happy Birthday
+                    <span class="glyphicon glyphicon-music"></span>
+                </button>
+            </div>
+            <div class="col-md-2">
+                <button id="playnewsong" class="btn-success btn-lg btn-block">Play song
                     <span class="glyphicon glyphicon-music"></span>
                 </button>
             </div>
@@ -369,7 +457,9 @@
                 </button>
             </div>
         </div>
-        <div class="row">
+</div>
+
+            <div class="row">
             <div class="col-md-3" id="leftsignal" style="height:300px">.....</div>
             <div class="col-md-3" id="front_leftsignal" style="height:300px">.....</div>
             <div class="col-md-3" id="frontrightdata" style="height:300px">.....</div>
