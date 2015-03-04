@@ -141,7 +141,7 @@
             var batCapPer = data.battery.capacity.percent;
             $("#batCapPer").text((batCapPer * 100).toFixed(2));
             $("#tempF").text(data.battery.temperature.fahrenheit.toFixed(2));
-            $("#charging").text(power > 0);
+            $("#charging").text(power > 0w);
             $("#allsensors").text(JSON.stringify(data));
 
             $(".left_signal").css("opacity", sensop(data.cliff_sensors.left.signal.magnitude));
@@ -235,126 +235,114 @@
         });
 
 
-        $('body').keydown(function(event) {
-            console.log(event.which);
-            speed = $("#speed").text();
-
-            //speed = 100;
-            if (event.which === 87 || event.which === 38) //w, up arrow - move forward
-            {
-                //socket.emit('sing', [[300,300]]);
-                event.preventDefault();
+         $('body').keydown(function(event) {
+                console.log(event.which);
                 speed = $("#speed").text();
-                speed = speed * 1 + 25;
-                $("#speed").text(speed);
-                socket.emit('drive', {
-                    left: speed,
-                    right: speed
-                });
-
-            }
-
-            if (event.which === 83 || event.which === 40) //s, down arrow - move backward
-            {
-                event.preventDefault();
-                speed = $("#speed").text();
-                speed = speed * 1 - 25;
-                $("#speed").text(speed);
-                socket.emit('drive', {
-                    left: speed,
-                    right: speed
-                });
-            }
-
-
-
-            if (event.which === 37) //left arrow - move right
-            {
-                event.preventDefault();
-                speed = $("#speed").text();
-                speed = 25;
-                $("#speed").text(speed);
-                socket.emit('drive', {
-                    left: speed,
-                    right: -speed
-                });
-
-            }
-
-            if (event.which === 65) //a - forward left
-            {
-                event.preventDefault();
-                speed = $("#speed").text();
-                (speed < 25) ? speed=25 : speed = speed;
-                $("#speed").text(speed);
-                socket.emit('drive', {
-                    left: Math.round(speed),
-                    right: Math.round(speed -25)
-                });
-
-            }
-
-            if (event.which === 68) //d - forward left
-            {
-                event.preventDefault();
-                speed = $("#speed").text();
-                (speed < 25) ? speed=25 : speed = speed;
-                $("#speed").text(speed);
-                socket.emit('drive', {
-                    left: Math.round(speed - 25),
-                    right: Math.round(speed)
-                });
-
-            }
-
-            if (event.which === 39) //right arrow - move left
-            {
-                event.preventDefault();
-                speed = $("#speed").text();
-                speed = 25;
-                $("#speed").text(speed);
-                socket.emit('drive', {
-                    left: -speed,
-                    right: speed
-                });
-            }
-
-            if (event.which === 32) //space - stop
-
-            {
-                event.preventDefault();
-
-
-
-                function slowtostop() {
+                //speed = 100;
+                if (event.which === 38) //w - move forward
+                {
                     speed = $("#speed").text();
-                    if (Math.abs(speed) <= 50) {
-                        speed = 0;
-                        $("#speed").text(speed);
-                        socket.emit('drive', {
-                            left: speed,
-                            right: speed
-                        });
-                        return;
-                    }
-                    setTimeout(function() {
-                        speed = $("#speed").text() * 1;
-                        speed += speed > 0 ? Number(-75) : Number(75);
-                        $("#speed").text(speed);
-                        socket.emit('drive', {
-                            left: speed,
-                            right: speed
-                        });
-                        slowtostop();
-                    }, 40);
+                    speed = speed * 1 + 50;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: speed,
+                        right: speed
+                    });
+
+                }
+                if (event.which === 87) //w - move forward
+                {
+                    speed = $("#speed").text();
+                    speed = speed * 1 + 50;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: speed,
+                        right: speed
+                    });
+
                 }
 
-                slowtostop();
+                if (event.which === 83) //s - move backward
+                {
+                    speed = $("#speed").text();
+                    speed = speed * 1 - 50;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: speed,
+                        right: speed
+                    });
+                }
+                if (event.which === 40) //s - move backward
+                {
+                    speed = $("#speed").text();
+                    speed = speed * 1 - 50;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: speed,
+                        right: speed
+                    });
+                }
 
-            }
+
+                if (event.which === 65) //d - move right
+                {
+                    speed = $("#speed").text();
+                    speed = 150;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: speed,
+                        right: -speed
+                    });
+
+                }
+                if (event.which === 39) //d - move right
+                {
+                    speed = $("#speed").text();
+                    speed = 150;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: speed,
+                        right: -speed
+                    });
+
+                }
+
+                if (event.which === 68) //a - move left
+                {
+                    speed = $("#speed").text();
+                    speed = 150;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: -speed,
+                        right: speed
+                    });
+                }
+                 if (event.which === 37) //a - move left
+                {
+                    speed = $("#speed").text();
+                    speed = 150;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: -speed,
+                        right: speed
+                    });
+                }
+
+                if (event.which === 32) //space - stop
+
+                {
+                    speed = $("#speed").text();
+                    speed = 150;
+                    $("#speed").text(speed);
+                    socket.emit('drive', {
+                        left: speed,
+                        right: speed
+                    });
+                }
+            });
+
         });
 
-    });
     </script>
 <style>
 .buttons{
