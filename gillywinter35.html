@@ -23,12 +23,93 @@
     -->
     <style>
     body {
-        background-color:lightred;
+        background-color: lightred;
     }
     </style>
 
     <script>
+    var tempo = 2000;
+    mysong = [
+        [261, tempo * .125],
+        [261, tempo * .125],
+        [261, tempo * .125],
+        [698, tempo * .25],
+        [880, tempo * .25],
+        [null, 50]
+    ];
 
+    var tempo = 2000;
+    birthdaysong = [
+            [392.0, tempo * .125], //G
+            [392.0, tempo * .125], //G
+            [440.0, tempo * .25], //A
+            [392.0, tempo * .25], //G
+            [523.3, tempo * .25], //C
+            [493.3, tempo * .50], //B
+            [null, tempo * .15],
+            [null, tempo * .10],
+            [392.0, tempo * .125], //G
+            [392.0, tempo * .125], //G
+            [440.0, tempo * .25], //A
+            [392.0, tempo * .25], //G
+            [587.3, tempo * .25], //D
+            [523.3, tempo * .50], //C
+            [null, tempo * .15],
+            [null, tempo * .10],
+            [392.0, tempo * .125], //G 
+            [392.0, tempo * .125], //G
+            [784.0, tempo * .25], //G
+            [659.3, tempo * .25], //E
+            [523.3, tempo * .25], //C
+            [493.3, tempo * .25], //B
+            [440.0, tempo * .25], //A
+            [null, tempo * .25],
+            [698.5, tempo * .125], //F
+            [698.5, tempo * .125], //F
+            [659.3, tempo * .25], //E
+            [523.3, tempo * .25], //C
+            [659.3, tempo * .25], //E
+            [587.3, tempo * .50], //D
+            [null, tempo * .15],
+            [null, tempo * .10],
+        ];
+
+
+    var tempo = 2000;
+    newsong = [
+            [329.6, tempo * .125], 
+            [493.9, tempo * .25], 
+            [493.9, tempo * .25], 
+            [493.9, tempo * .25],
+            [493.9, tempo * .125], 
+            [493.9, tempo * .125], 
+            [493.9, tempo * .125], 
+            [440.0, tempo * .125],  
+            [392.0, tempo * .125], 
+            [392.0, tempo * .375],
+            [null, tempo * .03125],
+            [392.0, tempo * .125],
+            [392.0, tempo * .125],  
+            [440.0, tempo * .125], 
+            [440.0, tempo * .50], 
+            [null, tempo * .125], //16
+            [440.0, tempo * .125], 
+            [392.0, tempo * .125],
+            [329.6, tempo * .625],
+            [261.6, tempo * .375], //c
+            [329.6, tempo * .125],
+            [493.9, tempo * .125],
+            [493.9, tempo * .125],
+            [493.9, tempo * .125],
+            [493.9, tempo * .375],
+            [587.3, tempo * .125],
+            [587.3, tempo * .25],
+            [493.9, tempo * .50],
+            [392.0, tempo * .125],
+            [392.0, tempo * .125],
+            [440.0, tempo * .125],
+            [493.9, tempo * .375],
+        ];
 
     function sensop(mag) {
         //newmag = 2 * ((1 - mag) - .5);
@@ -53,12 +134,15 @@
         socket.on('sensordata', function(data) {
 
             //console.log(data);
-            $("#current").text(data.battery.current.amps);
             $("#voltage").text(data.battery.voltage.volts.toFixed(2));
-            $("#left").text(data.cliff_sensors.left.signal.raw);
-            $("#front_left").text(data.cliff_sensors.front_left.signal.raw);
-            $("#front_right").text(data.cliff_sensors.front_right.signal.raw);
-            $("#right").text(data.cliff_sensors.right.signal.raw);
+            $("#current").text(data.battery.current.amps.toFixed(2));
+            var power = data.battery.voltage.volts * data.battery.current.amps;
+            $("#power").text(power.toFixed(2));
+            var batCapPer = data.battery.capacity.percent;
+            $("#batCapPer").text((batCapPer * 100).toFixed(2));
+            $("#tempF").text(data.battery.temperature.fahrenheit.toFixed(2));
+            $("#charging").text(power > 0);
+            $("#allsensors").text(JSON.stringify(data));
 
             $(".left_signal").css("opacity", sensop(data.cliff_sensors.left.signal.magnitude));
             $(".left_signal").text(sensop(data.cliff_sensors.left.signal.magnitude));
@@ -272,7 +356,88 @@
 
     });
     </script>
+<style>
+.buttons{
 
+  width: 33%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px;
+  position: absolute;
+}
+
+#playsong {
+    background-color: rgb(211, 181, 226);
+}
+#playbirthday {
+    background-color: rgb(188, 150, 234)
+}
+
+#playnewsong {
+    background-color: rgb(152, 88, 232);
+}
+
+.btnmusic {
+  margin-top: 20px;
+  margin-left:30px;
+  margin-right:30px;
+}
+
+#passiveMode{
+        background-color: rgb(190,240,190);
+        color: black;
+    }
+
+#safeMode{
+        background-color: rgb(150,200,150);
+    color: black;
+    }
+
+#fullMode{
+        background-color: rgb(100,150,100);
+    color: black;
+    }
+
+.control {
+  background-color: rgb(222, 222, 222);
+  color: rgb(52, 53, 56);
+  font-family: arial;
+  margin-top: 20px;
+  margin-left:30px;
+  margin-right:30px;
+}
+
+#songs {
+
+  width: 1000px;
+  margin-top: 20px;
+  margin-left:30px;
+  margin-right:30px;
+
+}
+
+.morespace{
+    margin-left:30px;
+    margin-right:30px;
+}
+
+.modes {
+    width:320px;
+    left:15px;
+    border:5px solid #d1d1d1;
+    float:left;
+}
+
+}
+
+.row {
+    margin-bottom: 20px;
+}
+.graphs {
+    margin-top: 20px;
+}
+
+</style>
 </head>
 
 <body>
@@ -295,80 +460,122 @@
         </div>
     <div>
         <div class="row">
-            <div class="col-xs-3 sensor-block col-xs-offset-1">
+            <div class="col-xs-2 sensor-block">
+                <div class="sensor-title">Charging</div>
+                <div class="sensor-value" id="charging">...</div>
+            </div>
+            <div class="col-xs-2 sensor-block">
                 <div class="sensor-title">Voltage</div>
                 <div class="sensor-value" id="voltage">...</div>
             </div>
-            <div class="col-xs-3 col-xs-offset-1 sensor-block">
-                <div class="sensor-title">Speed</div>
-                <div class="sensor-value" id="speed">0</div>
+            <div class="col-xs-2 sensor-block">
+                <div class="sensor-title">Current</div>
+                <div class="sensor-value" id="current">...</div>
             </div>
-            <div class="col-xs-3 col-xs-offset-1 sensor-block" id="darkness">
-                <div class="sensor-title">countup</div>
-                <div id="countup" class="sensor-value">0</div>
+            <div class="col-xs-2 sensor-block">
+                <div class="sensor-title">Power</div>
+                <div class="sensor-value" id="power">...</div>
+            </div>
+            <div class="col-xs-2 sensor-block">
+                <div class="sensor-title">Capacity %</div>
+                <div class="sensor-value" id="batCapPer">...</div>
+            </div>
+            <div class="col-xs-2 sensor-block">
+                <div class="sensor-title">Temp F</div>
+                <div class="sensor-value" id="tempF">...</div>
             </div>
         </div>
 
-<ul class="nav nav-tabs" id="move">
-  <li role="presentation" class="active buttons"><a href="#">Robot Control</a></li>
-  <li role="presentation" class="buttons"><a href="gillywinter35b">Sensors</a></li>
-  <li role="presentation" class="buttons"><a href="gillywinter35c">Songs</a></li>
-</ul> 
+        <div class="row">
+        <div id="songs">
+            <div class="col-md-4">
+                <button id="playsong" class="btn-lg btn-block btnmusic">Play Music
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button id="playbirthday" class="btn-lg btn-block btnmusic">Happy Birthday
+                    <span class="glyphicon glyphicon-music"></span>
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button id="playnewsong" class="btn-lg btn-block btnmusic">Play song
+                    <span class="glyphicon glyphicon-music"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
 
 <div>
         <h3>Robot Control</h3>
-        <div class="row">
-            <button class="btn-success btn col-md-2" id="passiveMode">Passive Mode</button>
-            <button class="btn-warning btn col-md-2" id="safeMode">Safe Mode</button>
-            <button class="btn-danger btn col-md-2" id="fullMode">Full Mode</button>
-        </div>
-
+        
         <div class="row controls">
+
+            <div class-"col-md-2">
+                <button class="btn-lg col-md-2 modes" id="passiveMode">Passive Mode</button>
+            </div>
             <div class="col-md-2">
-                <button class="btn-primary btn-lg btn-block control" id="forward"><span class="glyphicon glyphicon-arrow-up rotate-left-45"></span>Forward-left
+                <button class= "btn-lg btn-block control" id="forward"><span class="glyphicon glyphicon-arrow-up rotate-left-45"></span>Forward-left
                 </button>
             </div>
             <div class="col-md-2">
-                <button class="btn-primary btn-lg btn-block control" id="forward">Forward<span class="glyphicon glyphicon-arrow-up"></span>
+                <button class="btn-lg btn-block control" id="forward">Forward<span class="glyphicon glyphicon-arrow-up"></span>
                 </button>
             </div>
             <div class="col-md-2">
                 </button>
-                <button class="btn-primary btn-lg btn-block control" id="forward">Forward-right<span class="glyphicon glyphicon-arrow-up rotate-right-45"></span>
+                <button class="btn-lg btn-block control" id="forward">Forward-right<span class="glyphicon glyphicon-arrow-up rotate-right-45"></span>
                 </button>
             </div>
 
         </div>
         <div class="row controls">
+
+            <div class-"col-md-2">
+                <button class="btn-lg col-md-2 modes" id="safeMode">Safe Mode</button>
+            </div>
+
             <div class="col-md-2">
-                <button class="btn-primary btn-lg btn-block control" id="turnLeft"><span class="glyphicon glyphicon-arrow-left"> Left</span>
+                <button class="btn-lg btn-block control" id="turnLeft"><span class="glyphicon glyphicon-arrow-left">Left</span>
                 </button>
             </div>
             <div class="col-md-2">
 
-                <button class="btn-lg btn-block btn-danger control" id="stop">Stop
+                <button class="btn-lg btn-block control" id="stop">Stop
                     <span class="glyphicon glyphicon-stop"></span>
                 </button>
             </div>
 
             <div class="col-md-2">
-                <button class="btn-primary btn-lg btn-block control" id="turnRight">Right<span class="glyphicon glyphicon-arrow-right"></span>
+                <button class="btn-lg btn-block control" id="turnRight">Right<span class="glyphicon glyphicon-arrow-right"></span>
                 </button>
             </div>
         </div>
         <div class="row controls">
+            <div class-"col-md-2">
+                <button class="btn-lg col-md-2 modes" id="fullMode">Full Mode</button>
+            </div>
             <div class="col-md-2">
-                <button class="btn-primary btn-lg btn-block control" id="backleft">Back-Left
+                <button class="btn-lg btn-block control" id="backleft">Back-Left
                 </button>
             </div>
             <div class="col-md-2">
-                <button class="btn-primary btn-lg btn-block control" id="backward">Back<span class="glyphicon glyphicon-arrow-down"></span>
+                <button class="btn-lg btn-block control" id="backward">Back<span class="glyphicon glyphicon-arrow-down"></span>
                 </button>
             </div>
             <div class="col-md-2">
-                <button class="btn-primary btn-lg btn-block control" id="backright">Back-Right
+                <button class="btn-lg btn-block control" id="backright">Back-Right
                 </button>
             </div>
+        </div>
+
+
+        <div class="row graphs">
+            <div class="col-md-3" id="leftsignal" style="height:300px">.....</div>
+            <div class="col-md-3" id="front_leftsignal" style="height:300px">.....</div>
+            <div class="col-md-3" id="batterycapacity" style="height:300px">bat</div>
+            <div class="col-md-3" id="frontrightdata" style="height:300px">.....</div>
+            <div class="col-md-3" id="rightdata" style="height:300px">.....</div>
         </div>
 </div>
 
